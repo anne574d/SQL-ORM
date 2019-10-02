@@ -1,0 +1,7 @@
+P:\H1\8_PC-teknik\SqlObject\SqlObject\bin\Debug\SqlObject.exe.config
+P:\H1\8_PC-teknik\SqlObject\SqlObject\bin\Debug\SqlObject.exe
+P:\H1\8_PC-teknik\SqlObject\SqlObject\bin\Debug\SqlObject.pdb
+P:\H1\8_PC-teknik\SqlObject\SqlObject\obj\Debug\SqlObject.csprojAssemblyReference.cache
+P:\H1\8_PC-teknik\SqlObject\SqlObject\obj\Debug\SqlObject.csproj.CoreCompileInputs.cache
+P:\H1\8_PC-teknik\SqlObject\SqlObject\obj\Debug\SqlObject.exe
+P:\H1\8_PC-teknik\SqlObject\SqlObject\obj\Debug\SqlObject.pdb
