@@ -16,6 +16,14 @@ namespace SqlObject.Model
 
         private SqlConnection conn;
 
-        private 
+        private int id;
+        private string description;
+        private decimal price;
+        private Species species;
+
+        public int ID { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+
     }
 }

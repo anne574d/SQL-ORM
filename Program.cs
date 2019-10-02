@@ -19,10 +19,12 @@ namespace SqlObject
             patient.Name = "Freja";
             patient.ID = 5;
             patient.Species = new Species() { Name = "KANIN" };
-            patient.Birthday = DateTime.Now;
+            patient.DateOfBirth = DateTime.Now;
+            patient.DiedOn = DateTime.Now;
+            patient.Owner = new Owner(conn) { ID = 6 };
 
             patient.Insert();
-            //patient.Delete();
+            patient.Delete();
 
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();

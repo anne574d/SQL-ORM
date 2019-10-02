@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Collections;
 
 namespace SqlObject.Model
 {
@@ -21,50 +22,38 @@ namespace SqlObject.Model
 
         public void Insert()
         {
-            // PatientID is auto incrementing, so it cannot be specified
-            string query = $"INSERT INTO Patients " +
-                $"(OwnerID, Name, Species, Birthday) " +
-                $"VALUES " +
-                $"(@ownerID, @name, @species, @birthday)";
-            SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@ownerID", owner.ID);
-            cmd.Parameters.AddWithValue("@name", name);
-            cmd.Parameters.AddWithValue("@species", species.Name);
-            cmd.Parameters.AddWithValue("@birthday", birthday);
+            List<string> keys = new List<string>
+            {
+                "OwnerID", "Name", "Species", "DateOfBirth", "DiedOn"
+            };
 
-            execute(cmd);
+            ArrayList values = new ArrayList()
+            {
+                owner.ID, name, species.Name, dateOfBirth, diedOn
+            };
+
+            SQL.Insert(conn, "Patients", keys, values);
         }
 
         public void Delete()
         {
-            string query = "DELETE FROM Patients WHERE " +
-                "PatientID = @patientID AND " +
-                "OwnerID = @ownerID AND " +
-                "Name = @name AND " +
-                "Species = @species AND " +
-                "Birthday = @birthday";
+            List<string> keys = new List<string>
+            {
+                "PatientID", "OwnerID", "Name", "Species", "DateOfBirth", "DiedOn"
+            };
 
-            SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@PatientID", id);
-            cmd.Parameters.AddWithValue("@ownerID", owner.ID);
-            cmd.Parameters.AddWithValue("@name", name);
-            cmd.Parameters.AddWithValue("@species", species.Name);
-            cmd.Parameters.AddWithValue("@birthday", birthday);
+            ArrayList values = new ArrayList
+            {
+                id, owner.ID, name, species, dateOfBirth, diedOn
+            };
 
-            execute(cmd);
-
+            SQL.Delete(conn, "Patients", keys, values);
         }
+
+
         public void Update()
         {
             //    
-        }
-
-        public void execute(SqlCommand cmd)
-        {
-            Console.WriteLine("Executing: " + cmd.CommandText);
-            conn.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
-            conn.Close();
         }
 
         private SqlConnection conn;
@@ -73,7 +62,7 @@ namespace SqlObject.Model
         private Owner owner;
         private string name;
         private Species species;
-        private DateTime birthday;
+        private DateTime dateOfBirth, diedOn;
 
         public int ID
         {
@@ -95,12 +84,15 @@ namespace SqlObject.Model
             get { return species; }
             set { species = value; }
         }
-        public DateTime Birthday
+        public DateTime DateOfBirth
         {
-            get { return birthday; }
-            set { birthday = value; }
+            get { return dateOfBirth; }
+            set { dateOfBirth = value; }
         }
-
-    }
-   
+        public DateTime DiedOn
+        {
+            get { return diedOn; }
+            set { diedOn = value; }
+        }
+    }   
 }

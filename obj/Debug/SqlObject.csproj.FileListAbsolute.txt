@@ -5,3 +5,10 @@ P:\H1\8_PC-teknik\SqlObject\SqlObject\obj\Debug\SqlObject.csprojAssemblyReferenc
 P:\H1\8_PC-teknik\SqlObject\SqlObject\obj\Debug\SqlObject.csproj.CoreCompileInputs.cache
 P:\H1\8_PC-teknik\SqlObject\SqlObject\obj\Debug\SqlObject.exe
 P:\H1\8_PC-teknik\SqlObject\SqlObject\obj\Debug\SqlObject.pdb
+P:\H1\8_PC-teknik\SQL-ORM\obj\Debug\SqlObject.csprojAssemblyReference.cache
+P:\H1\8_PC-teknik\SQL-ORM\obj\Debug\SqlObject.csproj.CoreCompileInputs.cache
+P:\H1\8_PC-teknik\SQL-ORM\obj\Debug\SqlObject.exe
+P:\H1\8_PC-teknik\SQL-ORM\obj\Debug\SqlObject.pdb
+P:\H1\8_PC-teknik\SQL-ORM\bin\Debug\SqlObject.exe.config
+P:\H1\8_PC-teknik\SQL-ORM\bin\Debug\SqlObject.exe
+P:\H1\8_PC-teknik\SQL-ORM\bin\Debug\SqlObject.pdb
