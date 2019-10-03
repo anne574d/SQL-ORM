@@ -18,7 +18,7 @@ namespace SqlObject.Model
                 throw new Exception("Mismatch between length of keys and values lists");
             }
 
-            string query = $"INSERT INTO {tableName} ({string.Join(", ", keys)}) VALUES (@{string.Join(",@", keys)})";
+            string query = $"INSERT INTO {tableName} ({string.Join(", ", keys)}) VALUES (@{string.Join(", @", keys)})";
             SqlCommand cmd = new SqlCommand(query, conn);
 
             for (int i = 0; i < keys.Count; ++i)
@@ -28,26 +28,37 @@ namespace SqlObject.Model
 
             execute(cmd);
         }
-        public static void Delete(SqlConnection conn, string tableName, List<string> keys, ArrayList values)
+        public static void Delete(SqlConnection conn, string tableName, string pKey, string pValue)
+        {
+            string query = $"DELETE FROM {tableName} WHERE {pKey} = @{pKey}";
+            SqlCommand cmd = new SqlCommand(query, conn);
+
+            cmd.Parameters.AddWithValue($"@{pKey}", pValue);
+
+            execute(cmd);
+        }
+
+        public static void Update(SqlConnection conn, string tableName, List<string> keys, ArrayList values, string pKey, string pValue)
         {
             if (keys.Count != values.Count)
             {
                 throw new Exception("Mismatch between length of keys and values lists");
             }
 
-            List<string> conditions = new List<string>();
+            List<string> updates = new List<string>();
             for (int i = 0; i < keys.Count; ++i)
             {
-                conditions.Add( $"{keys[i]} = @{keys[i]}");
+                updates.Add($"{keys[i]} = @{keys[i]}");
             }
 
-            string query = $"DELETE FROM {tableName} WHERE {string.Join(" AND ", conditions)}";
+            string query = $"UPDATE {tableName} SET {string.Join(", ", updates)} WHERE {pKey} = @{pKey}";
             SqlCommand cmd = new SqlCommand(query, conn);
 
             for (int i = 0; i < keys.Count; ++i)
             {
                 cmd.Parameters.AddWithValue($"@{keys[i]}", values[i]);
             }
+            cmd.Parameters.AddWithValue($"@{pKey}", pValue);
 
             execute(cmd);
         }

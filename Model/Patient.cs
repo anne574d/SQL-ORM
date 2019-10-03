@@ -14,46 +14,37 @@ namespace SqlObject.Model
         {
             conn = c;
         }
-
-        public void Read()
-        {
-            //
-        }
-
         public void Insert()
         {
             List<string> keys = new List<string>
             {
-                "OwnerID", "Name", "Species", "DateOfBirth", "DiedOn"
+                "Name", "Species", "DateOfBirth", "DiedOn", "OwnerID"
             };
 
             ArrayList values = new ArrayList()
             {
-                owner.ID, name, species.Name, dateOfBirth, diedOn
+                name, species.Name, dateOfBirth, diedOn, owner.ID
             };
 
             SQL.Insert(conn, "Patients", keys, values);
         }
-
         public void Delete()
+        {
+            SQL.Delete(conn, "Patients", "ID", id.ToString());
+        }
+        public void Update()
         {
             List<string> keys = new List<string>
             {
-                "PatientID", "OwnerID", "Name", "Species", "DateOfBirth", "DiedOn"
+                "Name", "Species", "DateOfBirth", "DiedOn", "OwnerID"
             };
 
             ArrayList values = new ArrayList
             {
-                id, owner.ID, name, species, dateOfBirth, diedOn
+                name, species.Name, dateOfBirth, diedOn, owner.ID
             };
 
-            SQL.Delete(conn, "Patients", keys, values);
-        }
-
-
-        public void Update()
-        {
-            //    
+            SQL.Update(conn, "Patients", keys, values, "ID", id.ToString());
         }
 
         private SqlConnection conn;

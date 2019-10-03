@@ -29,7 +29,25 @@ namespace SqlObject.Model
             };
 
             SQL.Insert(conn, "Owners", keys, values);
+        }
 
+        public void Delete()
+        {
+            SQL.Delete(conn, "Owners", "ID", id.ToString());
+        }
+
+        public void Update()
+        {
+            List<string> keys = new List<string>
+            {
+                "FirstName", "LastName", "Phone", "Email", "Address", "ZipCode"
+            };
+            ArrayList values = new ArrayList
+            {
+                firstName, lastName, phone, email, address, zipCode.Number
+            };
+
+            SQL.Update(conn, "Owners", keys, values, "ID", id.ToString());
         }
 
         private SqlConnection conn;
@@ -38,12 +56,40 @@ namespace SqlObject.Model
         private int id;
         ZipCode zipCode;
 
-        public int ID { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Phone { get; set; }
-        public string Email { get; set; }
-        public string Address { get; set; }
-        public ZipCode ZipCodes { get; set; }
+        public int ID
+        {
+            get { return id; }
+            set { id = value; }
+        }
+        public string FirstName
+        {
+            get { return firstName; }
+            set { firstName = value; }
+        }
+        public string LastName
+        {
+            get { return lastName; }
+            set { lastName = value; }
+        }
+        public string Phone
+        {
+            get { return phone; }
+            set { phone = value; }
+        }
+        public string Email
+        {
+            get { return email; }
+            set { email = value; }
+        }
+        public string Address
+        {
+            get { return address; }
+            set { address = value; }
+        }
+        public ZipCode ZipCodes
+        {
+            get { return zipCode; }
+            set { zipCode = value; }
+        }
     }
 }

@@ -15,6 +15,37 @@ namespace SqlObject.Model
             conn = c;
         }
 
+        public void Insert()
+        {
+            List<string> keys = new List<string>
+            {
+                "ZipCode", "CityName"
+            };
+            ArrayList values = new ArrayList
+            {
+                zipcode, cityName
+            };
+
+            SQL.Insert(conn, "ZipCodes", keys, values);
+        }
+        public void Delete()
+        {
+            SQL.Delete(conn, "ZipCodes", "ZipCode", zipcode.ToString());
+        }
+        public void Update()
+        {
+            List<string> keys = new List<string>
+            {
+                "CityName"
+            };
+            ArrayList values = new ArrayList
+            {
+                cityName
+            };
+
+            SQL.Update(conn, "ZipCodes", keys, values, "ZipCode", zipcode.ToString());
+        }
+
         private SqlConnection conn;
 
         private int zipcode;
