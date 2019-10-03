@@ -28,11 +28,11 @@ namespace SqlObject.Model
                 description, price, species.Name
             };
 
-            SQL.Insert(conn, "Treatments", keys, values);
+            id = SQL.Insert(conn, tableName, keys, values, "ID");
         }
         public void Delete()
         {
-            SQL.Delete(conn, "Treatments", "ID", id.ToString());
+            SQL.Delete(conn, tableName, "ID", id.ToString());
         }
         public void Update()
         {
@@ -46,10 +46,11 @@ namespace SqlObject.Model
                 description, price, species.Name
             };
 
-            SQL.Update(conn, "Treatments", keys, values, "ID", id.ToString());
+            SQL.Update(conn, tableName, keys, values, "ID", id.ToString());
         }
 
         private SqlConnection conn;
+        private string tableName = "Treatments";
 
         private int id;
         private string description;

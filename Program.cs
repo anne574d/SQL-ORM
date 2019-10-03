@@ -13,24 +13,21 @@ namespace SqlObject
     {
         static void Main(string[] args)
         {
+            
             SqlConnection conn = getConnection("localhost", "PetClinic2", "ormLogin", "123456");
 
             Patient patient = new Patient(conn);
-            patient.Name = "Freja";
-            patient.ID = 5;
-            patient.Species = new Species(conn) { Name = "KANIN" };
-            patient.DateOfBirth = DateTime.Now;
-            patient.DiedOn = DateTime.Now;
+            patient.Name = "Willow";
+            patient.Species = new Species(conn) { Name = "FUGL" };
+            patient.DateOfBirth = new DateTime(2012,6,1);
+            //patient.DiedOn = new DateTime(2017, 5, 19);
             patient.Owner = new Owner(conn) { ID = 6 };
 
             patient.Insert();
-            patient.Delete();
-            patient.Update();
 
+            Console.WriteLine("Completed");
+            Console.ReadLine();
 
-
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
         }
 
         static SqlConnection getConnection(string server, string dbname, string username, string password)

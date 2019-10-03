@@ -21,14 +21,26 @@ namespace SqlObject.Model
             // ID is auto incremented, cannot be inserted manually
             List<string> keys = new List<string>
             {
-                "FirstName", "LastName", "Phone", "Email", "Address", "ZipCodes"
+                "FirstName", "LastName", "Address", "ZipCode"
             };
             ArrayList values = new ArrayList
             {
-                firstName, lastName, phone, email, address, zipCode.Number
+                firstName, lastName, address, zipCode.Number
             };
 
-            SQL.Insert(conn, "Owners", keys, values);
+            // Nullable values
+            if (!string.IsNullOrEmpty(phone))
+            {
+                keys.Add("Phone");
+                values.Add(phone);
+            }
+            if (!string.IsNullOrEmpty(email))
+            {
+                keys.Add("Email");
+                values.Add(email);
+            }
+
+            id = SQL.Insert(conn, "Owners", keys, values, "ID");
         }
 
         public void Delete()
@@ -40,17 +52,50 @@ namespace SqlObject.Model
         {
             List<string> keys = new List<string>
             {
-                "FirstName", "LastName", "Phone", "Email", "Address", "ZipCode"
+                "FirstName", "LastName", "Address", "ZipCode"
             };
             ArrayList values = new ArrayList
             {
-                firstName, lastName, phone, email, address, zipCode.Number
+                firstName, lastName, address, zipCode.Number
             };
+
+            // Nullable values
+            if (!string.IsNullOrEmpty(phone))
+            {
+                keys.Add("Phone");
+                values.Add(phone);
+            }
+            if (!string.IsNullOrEmpty(email))
+            {
+                keys.Add("Email");
+                values.Add(email);
+            }
 
             SQL.Update(conn, "Owners", keys, values, "ID", id.ToString());
         }
 
+        // Udpate a single column
+        public void Update(string columnName)
+        {
+            List<string> keys = new List<string> { columnName };
+            ArrayList values = new ArrayList();
+
+            switch (columnName)
+            {
+                case "FirstName": values.Add(firstName); break;
+                case "LastName": values.Add(lastName); break;
+                case "Phone": values.Add(phone); break;
+                case "Email": values.Add(email); break;
+                case "Address": values.Add(address); break;
+                case "ZipCode": values.Add(zipCode.Number); break;
+                default: throw new Exception($"Failed to update: Invalid column name \"{columnName}\"");
+            }
+
+            SQL.Update(conn, tableName, keys, values, "ID", id.ToString());
+        }
+
         private SqlConnection conn;
+        private string tableName = "Owners";
 
         private string firstName, lastName, phone, email, address;
         private int id;

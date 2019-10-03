@@ -60,7 +60,5 @@ namespace SqlObject.Model
             get { return cityName; }
             set { cityName = value; }
         }
-
-
     }
 }
