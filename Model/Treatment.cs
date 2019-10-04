@@ -5,14 +5,35 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Collections;
+using System.Data;
 
 namespace SqlObject.Model
 {
     class Treatment
     {
-        public Treatment(SqlConnection c)
+        public Treatment() { }
+        public Treatment(int pk)
         {
-            conn = c;
+            id = pk;
+            Read();
+        }
+
+        public void Read()
+        {
+            List<string> columns = new List<string>
+            {
+                "Description", "Price", "SpeciesType"
+            };
+            List<string> keys = new List<string> { "ID" };
+            ArrayList values = new ArrayList { id };
+
+            DataTable table = SQL.Instance.Select(tableName, columns, keys, values);
+            foreach (DataRow row in table.Rows)
+            {
+                description = row["Description"].ToString().Trim();
+                price = (decimal)row["Price"];
+                species = new Species(row["SpeciesType"].ToString().Trim());
+            }
         }
 
         public void Insert()
@@ -28,11 +49,11 @@ namespace SqlObject.Model
                 description, price, species.Name
             };
 
-            id = SQL.Insert(conn, tableName, keys, values, "ID");
+            id = int.Parse(SQL.Instance.Insert(tableName, keys, values, "ID"));
         }
         public void Delete()
         {
-            SQL.Delete(conn, tableName, "ID", id.ToString());
+            SQL.Instance.Delete(tableName, "ID", id.ToString());
         }
         public void Update()
         {
@@ -46,10 +67,9 @@ namespace SqlObject.Model
                 description, price, species.Name
             };
 
-            SQL.Update(conn, tableName, keys, values, "ID", id.ToString());
+            SQL.Instance.Update(tableName, keys, values, "ID", id.ToString());
         }
 
-        private SqlConnection conn;
         private string tableName = "Treatments";
 
         private int id;
@@ -77,6 +97,5 @@ namespace SqlObject.Model
             get { return species; }
             set { species = value; }
         }
-
     }
 }

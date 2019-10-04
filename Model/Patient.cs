@@ -5,15 +5,42 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Collections;
+using System.Data;
 
 namespace SqlObject.Model
 {
     class Patient
     {
-        public Patient(SqlConnection c)
+        public Patient() { }
+        public Patient(int pk)
         {
-            conn = c;
+            id = pk;
+            Read();
         }
+
+        public void Read()
+        {
+            List<string> columns = new List<string>
+            {
+                "Name", "Species", "DateOfBirth", "DiedOn", "OwnerID"
+            };
+            List<string> keys = new List<string> { "ID" };
+            ArrayList values = new ArrayList { id };
+
+            DataTable table = SQL.Instance.Select(tableName, columns, keys, values);
+            foreach (DataRow row in table.Rows)
+            {
+                name = row["Name"].ToString().Trim();
+                species = new Species(row["Species"].ToString().Trim());
+                dateOfBirth = (DateTime)row["DateOfBirth"];
+                if (row["DiedOn"] != DBNull.Value)
+                {
+                    diedOn = (DateTime)row["DiedOn"];
+                }
+                owner = new Owner((int)row["OwnerID"]);
+            }
+        }
+
         public void Insert()
         {
             List<string> keys = new List<string>
@@ -32,11 +59,11 @@ namespace SqlObject.Model
                 values.Add(diedOn);
             }
 
-            id = SQL.Insert(conn, "Patients", keys, values, "ID");
+            id = int.Parse(SQL.Instance.Insert(tableName, keys, values, "ID"));
         }
         public void Delete()
         {
-            SQL.Delete(conn, "Patients", "ID", id.ToString());
+            SQL.Instance.Delete(tableName, "ID", id.ToString());
         }
         public void Update()
         {
@@ -57,10 +84,22 @@ namespace SqlObject.Model
                 values.Add(diedOn);
             }
 
-            SQL.Update(conn, "Patients", keys, values, "ID", id.ToString());
+            SQL.Instance.Update(tableName, keys, values, "ID", id.ToString());
         }
 
-        private SqlConnection conn;
+        public void Print()
+        {
+            string result = $"" +
+                $"({id}) {name} - {species.Name}\n" +
+                $"{owner.FirstName} {owner.LastName}\n" +
+                $"{dateOfBirth.ToString("dd-MM-yyyy")}";
+            if (diedOn != DateTime.MinValue)
+            {
+                result += $" - {diedOn.ToString("dd-MM-yyyy")}";
+            }
+        }
+
+        private string tableName = "Patients";
 
         private int id;
         private Owner owner;

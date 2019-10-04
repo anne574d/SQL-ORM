@@ -38,14 +38,14 @@ namespace SqlObject
             string address = userInput("Address: \t");
             string zip = userInput("Zip code: \t");
 
-            Owner newOwner = new Owner(conn)
+            Owner newOwner = new Owner()
             {
                 FirstName = firstname,
                 LastName = lastname,
                 Phone = phone,
                 Email = email,
                 Address = address,
-                ZipCodes = new ZipCode(conn) { Number = int.Parse(zip) }
+                ZipCodes = new ZipCode() { Number = int.Parse(zip) }
             };
 
             if (saysYes(userInput("Is the infomation above correct? (y/N)")))
@@ -65,7 +65,7 @@ namespace SqlObject
             Console.WriteLine("CREATE NEW PATIENT");
             string name = userInput("Patient name: \t");
 
-            Patient newPatient = new Patient(conn)
+            Patient newPatient = new Patient()
             {
                 Name = name,
             };

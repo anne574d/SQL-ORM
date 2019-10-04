@@ -5,14 +5,30 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Collections;
+using System.Data;
 
 namespace SqlObject.Model
 {
     class ZipCode
     {
-        public ZipCode(SqlConnection c)
+        public ZipCode() { }
+        public ZipCode(int pk)
         {
-            conn = c;
+            zipcode = pk;
+            Read();
+        }
+
+        public void Read()
+        {
+            List<string> columns = new List<string> { "CityName" };
+            List<string> keys = new List<string> { "ZipCode" };
+            ArrayList values = new ArrayList { zipcode };
+
+            DataTable table = SQL.Instance.Select(tableName, columns, keys, values);
+            foreach (DataRow row in table.Rows)
+            {
+                cityName = row["CityName"].ToString().Trim();
+            }
         }
 
         public void Insert()
@@ -26,11 +42,11 @@ namespace SqlObject.Model
                 zipcode, cityName
             };
 
-            SQL.Insert(conn, "ZipCodes", keys, values);
+            SQL.Instance.Insert(tableName, keys, values);
         }
         public void Delete()
         {
-            SQL.Delete(conn, "ZipCodes", "ZipCode", zipcode.ToString());
+            SQL.Instance.Delete(tableName, "ZipCode", zipcode.ToString());
         }
         public void Update()
         {
@@ -43,11 +59,11 @@ namespace SqlObject.Model
                 cityName
             };
 
-            SQL.Update(conn, "ZipCodes", keys, values, "ZipCode", zipcode.ToString());
+            SQL.Instance.Update(tableName, keys, values, "ZipCode", zipcode.ToString());
         }
 
-        private SqlConnection conn;
-
+        private string tableName = "ZipCodes";
+        
         private int zipcode;
         private string cityName;
         public int Number

@@ -5,15 +5,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
-
+using System.Diagnostics;
+using System.Data;
 
 namespace SqlObject.Model
 {
     class Owner
     {
-        public Owner(SqlConnection c)
+        public Owner(){ }
+
+        public Owner(int pk)
         {
-            conn = c;
+            Console.WriteLine($"Created new owner with ID {pk}");
+            id = pk;
+            Read();
+        }
+        public void Read()
+        {
+            List<string> columns = new List<string>
+            {
+                "FirstName", "LastName", "Phone", "Email", "Address", "ZipCode"
+            };
+            List<string> keys = new List<string> { "ID" };
+            ArrayList values = new ArrayList { id }; 
+
+            DataTable table = SQL.Instance.Select(tableName, columns, keys, values);
+            foreach(DataRow row in table.Rows)
+            {
+                firstName = row["FirstName"].ToString().Trim();
+                lastName = row["LastName"].ToString().Trim();
+                if (row["Phone"] != DBNull.Value)
+                {
+                    phone = row["Phone"].ToString().Trim();
+                }
+                if (row["Email"] != DBNull.Value)
+                {
+                    email = row["Email"].ToString().Trim();
+                }
+                address = row["Address"].ToString().Trim();
+                zipCode = new ZipCode((int)row["ZipCode"]);
+            }
         }
 
         public void Insert()
@@ -40,12 +71,13 @@ namespace SqlObject.Model
                 values.Add(email);
             }
 
-            id = SQL.Insert(conn, "Owners", keys, values, "ID");
+            id = int.Parse(SQL.Instance.Insert(tableName, keys, values, "ID"));
+            Debug.WriteLine($"New post added with ID = {id}");
         }
 
         public void Delete()
         {
-            SQL.Delete(conn, "Owners", "ID", id.ToString());
+            SQL.Instance.Delete(tableName, "ID", id.ToString());
         }
 
         public void Update()
@@ -71,7 +103,7 @@ namespace SqlObject.Model
                 values.Add(email);
             }
 
-            SQL.Update(conn, "Owners", keys, values, "ID", id.ToString());
+            SQL.Instance.Update(tableName, keys, values, "ID", id.ToString());
         }
 
         // Udpate a single column
@@ -91,10 +123,19 @@ namespace SqlObject.Model
                 default: throw new Exception($"Failed to update: Invalid column name \"{columnName}\"");
             }
 
-            SQL.Update(conn, tableName, keys, values, "ID", id.ToString());
+            SQL.Instance.Update(tableName, keys, values, "ID", id.ToString());
         }
 
-        private SqlConnection conn;
+        public void Print()
+        {
+            string result = $"({id}) {firstName} {lastName}\n" +
+                $"{address}\n" +
+                $"{zipCode.Number} {zipCode.CityName}\n" +
+                $"{phone}\n" +
+                $"{email}";
+            Console.WriteLine(result);
+        }
+
         private string tableName = "Owners";
 
         private string firstName, lastName, phone, email, address;

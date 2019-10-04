@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -10,9 +11,31 @@ namespace SqlObject.Model
 {
     class Consultation
     {
-        public Consultation(SqlConnection c)
+        public Consultation() { }
+        public Consultation(int pk)
         {
-            conn = c;
+            id = pk;
+            Read();
+        }
+
+        public void Read()
+        {
+            List<string> columns = new List<string>
+            {
+                "TreatmentID", "PatientID", "Price", "ConsultationDate", "Invoice"
+            };
+            List<string> keys = new List<string> { "ID" };
+            ArrayList values = new ArrayList { id };
+
+            DataTable table = SQL.Instance.Select(tableName, columns, keys, values);
+            foreach (DataRow row in table.Rows)
+            {
+                treatment = new Treatment((int)row["TreatmentID"]);
+                patient = new Patient((int)row["PatientID"]);
+                price = (decimal)row["Price"];
+                consultationDate = (DateTime) row["ConsultationDate"];
+                invoice = (bool)row["Invoice"];
+            }
         }
 
         public void Insert()
@@ -39,11 +62,11 @@ namespace SqlObject.Model
                 values.Add(invoice);
             }
 
-            id = SQL.Insert(conn, "Consultations", keys, values, "ID");
+            id = int.Parse(SQL.Instance.Insert(tableName, keys, values, "ID"));
         }
         public void Delete()
         {
-            SQL.Delete(conn, tableName, "ID", id.ToString());
+            SQL.Instance.Delete(tableName, "ID", id.ToString());
         }
 
         // Update all columns
@@ -71,10 +94,10 @@ namespace SqlObject.Model
                 values.Add(invoice);
             }
 
-            SQL.Update(conn, tableName, keys, values, "ID", id.ToString());
+            SQL.Instance.Update(tableName, keys, values, "ID", id.ToString());
         }
 
-        // Udpate a single column
+        // Update a single column
         public void Update(string columnName)
         {
             List<string> keys = new List<string> { columnName };
@@ -90,7 +113,7 @@ namespace SqlObject.Model
                 default: throw new Exception($"Failed to update: Invalid column name \"{columnName}\"");
             }
 
-            SQL.Update(conn, tableName, keys, values, "ID", id.ToString());
+            SQL.Instance.Update(tableName, keys, values, "ID", id.ToString());
         }
 
         private SqlConnection conn;

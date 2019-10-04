@@ -10,9 +10,10 @@ namespace SqlObject.Model
 {
     class Species
     {
-        public Species(SqlConnection c)
+        public Species() { }
+        public Species(string pk)
         {
-            conn = c;
+            name = pk;
         }
 
         public void Insert()
@@ -26,15 +27,14 @@ namespace SqlObject.Model
                 name
             };
 
-            SQL.Insert(conn, "Species", keys, values);
+            SQL.Instance.Insert(tableName, keys, values);
         }
 
         // Species is a single-columned table which acts as foreign key in a lot of different tables.
         // Therefore we do not wish to update or delete anything from this table. 
         // It is only possible to add new Species.
 
-        SqlConnection conn;
-
+        private string tableName = "Species";
         private string name;
 
         public string Name
@@ -42,6 +42,5 @@ namespace SqlObject.Model
             get { return name; }
             set { name = value; }
         }
-    
     }
 }
