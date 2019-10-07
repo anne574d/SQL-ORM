@@ -15,10 +15,10 @@ namespace SqlObject
         {
             SQL.Instance.ConnectionInfo("localhost", "PetClinic2", "ormLogin", "123456");
 
-            //selectExamples();
+            selectExamples();
             //insertExamples();
             //updateExamples();
-            deleteExamples();
+            //deleteExamples();
 
             Console.WriteLine("Examples complete. Press any key to exit... ");
             Console.ReadLine();
@@ -31,9 +31,9 @@ namespace SqlObject
 
             Patient patient = new Patient(11);
             int rowsAffected = patient.Delete();
-            Console.WriteLine($"{rowsAffected} rows affected.");
+            Console.WriteLine($"{rowsAffected} rows affected.\n");
 
-            Console.Write("Press any key to continue... ");
+            Console.WriteLine("Press any key to continue... ");
             Console.ReadKey();
         }
 
@@ -47,11 +47,11 @@ namespace SqlObject
 
             owner.Email = "newemailaddress@email.dk";
             owner.Update();
-
+            
             Owner updatedOwner = new Owner(1);
             owner.Print();
 
-            Console.Write("Press any key to continue... ");
+            Console.WriteLine("Press any key to continue... ");
             Console.ReadKey();
         }
 
@@ -66,12 +66,12 @@ namespace SqlObject
             patient.DateOfBirth = new DateTime(2016, 1, 4);
             patient.Owner = new Owner() { ID = 10 };
             patient.Insert();
-            Console.WriteLine($"Created new patient post with ID = {patient.ID}");
+            Console.WriteLine($"Created new patient post with ID = {patient.ID}\n");
 
             Species krybdyr = new Species("HEST");
             krybdyr.Insert();
 
-            Console.Write("Press any key to continue... ");
+            Console.WriteLine("Press any key to continue... ");
             Console.ReadKey();
         }
 
@@ -82,21 +82,17 @@ namespace SqlObject
 
             Owner owner1 = new Owner(1);
             owner1.Print();
-            Console.WriteLine("");
-
+            
             Owner owner2 = new Owner(5);
             owner2.Print();
-            Console.WriteLine("");
 
             Patient p1 = new Patient(6);
             p1.Print();
-            Console.WriteLine("");
 
             Patient p2 = new Patient(5);
             p2.Print();
-            Console.WriteLine("");
 
-            Console.Write("Press any key to continue... ");
+            Console.WriteLine("Press any key to continue... ");
             Console.ReadKey();
         }
     }

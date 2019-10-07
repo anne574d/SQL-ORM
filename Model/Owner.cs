@@ -134,7 +134,7 @@ namespace SqlObject.Model
                 $"{address}\n" +
                 $"{zipCode.Number} {zipCode.CityName}\n" +
                 $"{phone}\n" +
-                $"{email}";
+                $"{email}\n";
             Console.WriteLine(result);
         }
 

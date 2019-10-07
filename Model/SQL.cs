@@ -211,6 +211,12 @@ namespace SqlObject.Model
             return rows;
         }
 
+        // Execute functions commented out because they probably 
+        // ought to be in a related class/a class of their own
+        // instead of the generic CRUD
+
+        /*
+        // Execute SP and return rows affected
         public int Execute(string procedureName, List<string> parameters, ArrayList values)
         {
             if (parameters.Count != values.Count)
@@ -235,5 +241,33 @@ namespace SqlObject.Model
             Debug.WriteLine($"{rows} rows affected");
             return rows;
         }
+
+        // Execute SP and return Datatable 
+        public DataTable Execute(string procedureName, List<string> parameters, ArrayList values)
+        {
+            if (parameters.Count != values.Count)
+            {
+                throw new Exception("Mismatch between length of parameters and values lists");
+            }
+
+            SqlCommand cmd = new SqlCommand(procedureName, conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            for (int i = 0; i < parameters.Count; ++i)
+            {
+                cmd.Parameters.AddWithValue($"@{parameters[i]}", values[i]);
+            }
+
+            // Open connection, execute query
+            conn.Open();
+            Debug.WriteLine($"Executing: {cmd.CommandText}");
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            // Load reader data over to datatable object before closing connection
+            DataTable result = new DataTable();
+            result.Load(reader);
+            conn.Close();
+        }*/
+
     }
 }

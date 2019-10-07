@@ -100,7 +100,7 @@ namespace SqlObject.Model
             {
                 result += $" - {diedOn.ToString("dd-MM-yyyy")}";
             }
-
+            result += "\n";
             Console.WriteLine(result);
         }
 
