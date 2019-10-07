@@ -11,9 +11,9 @@ namespace SqlObject.Model
     class Species
     {
         public Species() { }
-        public Species(string pk)
+        public Species(string primaryKey)
         {
-            name = pk;
+            name = primaryKey;
         }
 
         public void Insert()

@@ -14,39 +14,90 @@ namespace SqlObject
         static void Main(string[] args)
         {
             SQL.Instance.ConnectionInfo("localhost", "PetClinic2", "ormLogin", "123456");
-            /*
-            Patient patient = new Patient();
-            patient.Name = "Nemo";
-            patient.Species = new Species() { Name = "FISK" };
-            patient.DateOfBirth = new DateTime(2017,12,12);
-            patient.Owner = new Owner() { ID = 10 };
 
-            patient.Insert();
-            */
+            //selectExamples();
+            //insertExamples();
+            //updateExamples();
+            deleteExamples();
 
-            //Patient p = new Patient(6);
-
-            Owner o1 = new Owner(1);
-            o1.Print();
-            Owner o2 = new Owner(5);
-            o2.Print();
-            Patient p1 = new Patient(6);
-            //p1.Print();
-            Patient p2 = new Patient(1);
-
-            Console.WriteLine(p2.Owner.LastName);
-            //p2.Print();
-
-            /*
-            Owner own = new Owner(1);
-            Console.WriteLine($"" +
-                $"{own.FirstName} {own.LastName}, {own.Email} \n" +
-                $"{own.Address}\n" +
-                $"{own.ZipCodes.Number} {own.ZipCodes.CityName}");
-                */
-            Console.WriteLine("Completed");
+            Console.WriteLine("Examples complete. Press any key to exit... ");
             Console.ReadLine();
+        }
 
+        public static void deleteExamples()
+        {
+            Console.Clear();
+            Console.WriteLine("DELETE example\n");
+
+            Patient patient = new Patient(11);
+            int rowsAffected = patient.Delete();
+            Console.WriteLine($"{rowsAffected} rows affected.");
+
+            Console.Write("Press any key to continue... ");
+            Console.ReadKey();
+        }
+
+        public static void updateExamples()
+        {
+            Console.Clear();
+            Console.WriteLine("UPDATE examples\n");
+
+            Owner owner = new Owner(1);
+            owner.Print();
+
+            owner.Email = "newemailaddress@email.dk";
+            owner.Update();
+
+            Owner updatedOwner = new Owner(1);
+            owner.Print();
+
+            Console.Write("Press any key to continue... ");
+            Console.ReadKey();
+        }
+
+        public static void insertExamples()
+        {
+            Console.Clear();
+            Console.WriteLine("INSERT examples\n"); 
+
+            Patient patient = new Patient();
+            patient.Name = "Gecco";
+            patient.Species = new Species("KRYBDYR");
+            patient.DateOfBirth = new DateTime(2016, 1, 4);
+            patient.Owner = new Owner() { ID = 10 };
+            patient.Insert();
+            Console.WriteLine($"Created new patient post with ID = {patient.ID}");
+
+            Species krybdyr = new Species("HEST");
+            krybdyr.Insert();
+
+            Console.Write("Press any key to continue... ");
+            Console.ReadKey();
+        }
+
+        public static void selectExamples()
+        {
+            Console.Clear();
+            Console.WriteLine("SELECT examples\n");
+
+            Owner owner1 = new Owner(1);
+            owner1.Print();
+            Console.WriteLine("");
+
+            Owner owner2 = new Owner(5);
+            owner2.Print();
+            Console.WriteLine("");
+
+            Patient p1 = new Patient(6);
+            p1.Print();
+            Console.WriteLine("");
+
+            Patient p2 = new Patient(5);
+            p2.Print();
+            Console.WriteLine("");
+
+            Console.Write("Press any key to continue... ");
+            Console.ReadKey();
         }
     }
 }

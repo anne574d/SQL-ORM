@@ -14,10 +14,9 @@ namespace SqlObject.Model
     {
         public Owner(){ }
 
-        public Owner(int pk)
+        public Owner(int primaryKey)
         {
-            Console.WriteLine($"Created new owner with ID {pk}");
-            id = pk;
+            id = primaryKey;
             Read();
         }
         public void Read()
@@ -75,9 +74,12 @@ namespace SqlObject.Model
             Debug.WriteLine($"New post added with ID = {id}");
         }
 
-        public void Delete()
+        public int Delete()
         {
-            SQL.Instance.Delete(tableName, "ID", id.ToString());
+            List<string> keys = new List<string> { "ID" };
+            ArrayList values = new ArrayList { id };
+            int rows = SQL.Instance.Delete(tableName, keys, values);
+            return rows;
         }
 
         public void Update()

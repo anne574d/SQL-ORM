@@ -12,9 +12,9 @@ namespace SqlObject.Model
     class Consultation
     {
         public Consultation() { }
-        public Consultation(int pk)
+        public Consultation(int primaryKey)
         {
-            id = pk;
+            id = primaryKey;
             Read();
         }
 
@@ -64,9 +64,12 @@ namespace SqlObject.Model
 
             id = int.Parse(SQL.Instance.Insert(tableName, keys, values, "ID"));
         }
-        public void Delete()
+        public int Delete()
         {
-            SQL.Instance.Delete(tableName, "ID", id.ToString());
+            List<string> keys = new List<string> { "ID" };
+            ArrayList values = new ArrayList { id };
+            int rows = SQL.Instance.Delete(tableName, keys, values);
+            return rows;
         }
 
         // Update all columns

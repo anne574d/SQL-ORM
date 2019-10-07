@@ -12,9 +12,9 @@ namespace SqlObject.Model
     class ZipCode
     {
         public ZipCode() { }
-        public ZipCode(int pk)
+        public ZipCode(int primaryKey)
         {
-            zipcode = pk;
+            zipcode = primaryKey;
             Read();
         }
 
@@ -44,9 +44,12 @@ namespace SqlObject.Model
 
             SQL.Instance.Insert(tableName, keys, values);
         }
-        public void Delete()
+        public int Delete()
         {
-            SQL.Instance.Delete(tableName, "ZipCode", zipcode.ToString());
+            List<string> keys = new List<string> { "ZipCode" };
+            ArrayList values = new ArrayList { zipcode };
+            int rows = SQL.Instance.Delete(tableName, keys, values);
+            return rows;
         }
         public void Update()
         {

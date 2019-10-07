@@ -12,9 +12,9 @@ namespace SqlObject.Model
     class Patient
     {
         public Patient() { }
-        public Patient(int pk)
+        public Patient(int primaryKey)
         {
-            id = pk;
+            id = primaryKey;
             Read();
         }
 
@@ -61,9 +61,12 @@ namespace SqlObject.Model
 
             id = int.Parse(SQL.Instance.Insert(tableName, keys, values, "ID"));
         }
-        public void Delete()
+        public int Delete()
         {
-            SQL.Instance.Delete(tableName, "ID", id.ToString());
+            List<string> keys = new List<string> { "ID" };
+            ArrayList values = new ArrayList { id };
+            int rows = SQL.Instance.Delete(tableName, keys, values);
+            return rows;
         }
         public void Update()
         {
@@ -97,6 +100,8 @@ namespace SqlObject.Model
             {
                 result += $" - {diedOn.ToString("dd-MM-yyyy")}";
             }
+
+            Console.WriteLine(result);
         }
 
         private string tableName = "Patients";
@@ -115,7 +120,9 @@ namespace SqlObject.Model
         }
         public Owner Owner
         {
-            get { return owner; }
+            get {
+                Console.WriteLine("trying to return owner");
+                return owner; }
             set { owner = value; }
         }
         public string Name

@@ -12,7 +12,8 @@ namespace SqlObject.Model
 {
     public class SQL
     {
-        // Make SQL a singleton, which is initialized once with connection info
+        // Make SQL a singleton, which saves the given connection info
+        // which can then be used anywhere in the program
         private static SQL instance;
         private SQL() { }
         public static SQL Instance
@@ -27,7 +28,7 @@ namespace SqlObject.Model
             }
         }
 
-        // Add/change SqlConnection object's parameters
+        // Add/change the parameters of the SqlConnection
         private SqlConnection conn;
         public void ConnectionInfo(string serverAddr, string databaseName, string username, string password)
         {
@@ -43,19 +44,27 @@ namespace SqlObject.Model
         }
 
         // ######################################### SQL functions #########################################
+
+        // Returns given columns for all posts in table 
         public DataTable SelectAll(string tableName, List<string> columns)
         {
             string query = $"SELECT {string.Join(", ", columns)} FROM {tableName}";
             SqlCommand cmd = new SqlCommand(query, conn);
 
+            // Open connection, execute query
             conn.Open();
+            Debug.WriteLine($"Executing: {cmd.CommandText}");
             SqlDataReader reader = cmd.ExecuteReader();
+
+            // Load reader data over to datatable object before closing connection
             DataTable result = new DataTable();
             result.Load(reader);
             conn.Close();
+
             return result;
         }
 
+        // Returns given columns for the posts in table which fulfills conditions
         public DataTable Select(string tableName, List<string> columns, List<string> keys, ArrayList values)
         {
             if (keys.Count != values.Count)
@@ -76,15 +85,20 @@ namespace SqlObject.Model
                 cmd.Parameters.AddWithValue($"{keys[i]}", values[i]);
             }
 
+            // Open connection, execute query
             conn.Open();
+            Debug.WriteLine($"Executing: {cmd.CommandText}");
             SqlDataReader reader = cmd.ExecuteReader();
+
+            // Load reader data over to datatable object before closing connection
             DataTable result = new DataTable();
             result.Load(reader);
             conn.Close();
+
             return result;
         }
 
-        // insert post and return the value of the "output"-column
+        // Inserts post and returns the value of the "output"-column
         public string Insert(string tableName, List<string> keys, ArrayList values, string output)
         {
             if (keys.Count != values.Count)
@@ -100,16 +114,16 @@ namespace SqlObject.Model
                 cmd.Parameters.AddWithValue($"@{keys[i]}", values[i]);
             }
 
-            // Open connection, execute query, return primary key of new post
-            Debug.WriteLine($"Executing: {cmd.CommandText}");
+            // Open connection, execute query...
             conn.Open();
+            Debug.WriteLine($"Executing: {cmd.CommandText}");
             string result = cmd.ExecuteScalar().ToString();
             cmd.Connection.Close();
 
             return result;
         }
 
-        // insert without returning an output
+        // Inserts without returning an output
         public void Insert(string tableName, List<string> keys, ArrayList values)
         {
             if (keys.Count != values.Count)
@@ -125,30 +139,46 @@ namespace SqlObject.Model
                 cmd.Parameters.AddWithValue($"@{keys[i]}", values[i]);
             }
 
-            // Open connection, execute query
-            Debug.WriteLine($"Executing: {cmd.CommandText}");
+            // Open connection, execute query, close connection
             conn.Open();
+            Debug.WriteLine($"Executing: {cmd.CommandText}");
             cmd.ExecuteScalar();
             cmd.Connection.Close();
         }
 
-        public int Delete(string tableName, string pKey, string pValue)
+        // Delete post with a set of conditions
+        public int Delete(string tableName, List<string> keys, ArrayList values)
         {
-            string query = $"DELETE FROM {tableName} WHERE {pKey} = @{pKey}";
+            if (keys.Count != values.Count)
+            {
+                throw new Exception("Mismatch between length of keys and values lists");
+            }
+
+            List<string> conditions = new List<string>();
+            for (int i = 0; i < keys.Count; ++i)
+            {
+                conditions.Add($"{keys[i]} = @{keys[i]}");
+            }
+
+            string query = $"DELETE FROM {tableName} WHERE {string.Join(" AND ", conditions)}";
             SqlCommand cmd = new SqlCommand(query, conn);
 
-            cmd.Parameters.AddWithValue($"@{pKey}", pValue);
+            for (int i = 0; i < keys.Count; ++i)
+            {
+                cmd.Parameters.AddWithValue($"@{keys[i]}", values[i]);
+            }
 
             // Open connection, execute query, return rows affected
-            Debug.WriteLine($"Executing: {cmd.CommandText}");
             conn.Open();
-            int rowsAffected = cmd.ExecuteNonQuery();
+            Debug.WriteLine($"Executing: {cmd.CommandText}");
+            int rows = cmd.ExecuteNonQuery();
             cmd.Connection.Close();
 
-            Debug.WriteLine($"{rowsAffected} rows affected");
-            return rowsAffected;
+            Debug.WriteLine($"{rows} rows affected");
+            return rows;
         }
 
+        // Update all columns for post with given primary key/value
         public int Update(string tableName, List<string> keys, ArrayList values, string pKey, string pValue)
         {
             if (keys.Count != values.Count)
@@ -172,16 +202,16 @@ namespace SqlObject.Model
             cmd.Parameters.AddWithValue($"@{pKey}", pValue);
 
             // Open connection, execute query, return rows affected
-            Debug.WriteLine($"Executing: {cmd.CommandText}");
             conn.Open();
-            int rowsAffected = cmd.ExecuteNonQuery();
+            Debug.WriteLine($"Executing: {cmd.CommandText}");
+            int rows = cmd.ExecuteNonQuery();
             cmd.Connection.Close();
 
-            Debug.WriteLine($"{rowsAffected} rows affected");
-            return rowsAffected;
+            Debug.WriteLine($"{rows} rows affected");
+            return rows;
         }
 
-        public void Execute(string procedureName, List<string> parameters, ArrayList values)
+        public int Execute(string procedureName, List<string> parameters, ArrayList values)
         {
             if (parameters.Count != values.Count)
             {
@@ -199,11 +229,11 @@ namespace SqlObject.Model
             // Open connection, execute query, return rows affected
             Debug.WriteLine($"Executing: {cmd.CommandText}");
             conn.Open();
-            int rowsAffected = cmd.ExecuteNonQuery();
+            int rows = cmd.ExecuteNonQuery();
             cmd.Connection.Close();
 
-            Debug.WriteLine($"{rowsAffected} rows affected");
-            //return rowsAffected;
+            Debug.WriteLine($"{rows} rows affected");
+            return rows;
         }
     }
 }
